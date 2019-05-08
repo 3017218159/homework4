@@ -1,0 +1,62 @@
+﻿<body>
+    <div>
+        <h3>Comments</h3>
+    </div>
+    <div>
+        <h4>Search All</h4>
+        <input type="button" id="SearchAll" value="SearchAll" onclick="javascript:searchAll()"/>
+    </div>
+    <div>
+        <h4>Search by ID</h4>
+        <input type="text" id="id" placeholder="Please input an ID"/>
+        <input type="button" id="Search" value="Search" class="button"/>
+    </div>
+
+    <script type="text/javascript" src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#Search').click(function () {
+                var id = $('#id').val();
+                if (id == "") {
+                    alert("Please input an ID!");
+                }
+                else {
+                    $.ajax({
+                        url: "../api/Comments/Get/" + id,
+                        type: "get",
+                        success: function (data) {
+                            $('#id').val('');
+                            if (data.ID == 0) {
+                                alert("Error:Not Found!");
+                            } else {
+                                alert("ID:" + data.ID + "\nAuthor:" + data.Author + "\nText:" + data.Text);
+                            }
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    });
+                }
+            });
+
+        });
+        function searchAll()
+        {
+            //window.open("../api/Comments/");
+            $.ajax({
+                url: "../api/Comments/" ,
+                type: "get",
+                success: function (data) {
+                    var count = data.length;
+                    //alert(count);
+                    for (var i = 0; i < count; i++) {
+                        alert("ID:" + data[i].ID + "\nAuthor:" + data[i].Author + "\nText:" + data[i].Text);
+                    }
+                },
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        }
+    </script>
+</body>

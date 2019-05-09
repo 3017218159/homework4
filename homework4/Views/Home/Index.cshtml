@@ -4,12 +4,31 @@
     </div>
     <div>
         <h4>Search All</h4>
-        <input type="button" id="SearchAll" value="SearchAll" onclick="javascript:searchAll()"/>
+        <input type="button" id="SearchAll" value="SearchAll" onclick="javascript:searchAll()" />
     </div>
     <div>
         <h4>Search by ID</h4>
-        <input type="text" id="id" placeholder="Please input an ID"/>
-        <input type="button" id="Search" value="Search" class="button"/>
+        <input type="text" id="id" placeholder="ID" />
+        <input type="button" id="Search" value="Search" class="button" />
+    </div>
+    <div>
+        <h4>Add</h4>
+        <input type="text" id="id2" placeholder="ID" />
+        <input type="text" id="author2" placeholder="Author" />
+        <input type="text" id="text2" placeholder="Text" />
+        <input type="button" id="Add" value="Add" class="button" />
+    </div>
+    <div>
+        <h4>Update</h4>
+        <input type="text" id="id3" placeholder="ID" />
+        <input type="text" id="author3" placeholder="Author" />
+        <input type="text" id="text3" placeholder="Text" />
+        <input type="button" id="Update" value="Update" class="button" />
+    </div>
+    <div>
+        <h4>Delete</h4>
+        <input type="text" id="id4" placeholder="ID" />
+        <input type="button" id="Delete" value="Delete" class="button" />
     </div>
 
     <script type="text/javascript" src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -19,6 +38,9 @@
                 var id = $('#id').val();
                 if (id == "") {
                     alert("Please input an ID!");
+                }
+                else if (parseInt(id) < 0) {
+                    alert("Error");
                 }
                 else {
                     $.ajax({
@@ -39,12 +61,95 @@
                 }
             });
 
+            $('#Add').click(function () {
+                var id = $('#id2').val();
+                var author = $('#author2').val();
+                var text = $('#text2').val();
+                var person = { ID: parseInt(id), Author: author, Text: text };
+                if (id == "") {
+                    alert("Please input an ID!");
+                }
+                else if (parseInt(id) <= 0) {
+                    alert("Error");
+                }
+                else {
+                    $.ajax({
+                        url: "../api/Comments/Post",
+                        type: "post",
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: JSON.stringify(person),
+                        success: function (data) {
+                            $('#id2').val('');
+                            $('#author2').val('');
+                            $('#text2').val('');
+                            alert(data);
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    });
+                }
+            });
+
+            $('#Update').click(function () {
+                var id = $('#id3').val();
+                var author = $('#author3').val();
+                var text = $('#text3').val();
+                var person = { ID: parseInt(id), Author: author, Text: text };
+                if (id == "") {
+                    alert("Please input an ID!");
+                }
+                else if (parseInt(id) <= 0) {
+                    alert("Error");
+                }
+                else {
+                    $.ajax({
+                        url: "../api/Comments/Put/" + id,
+                        type: "put",
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: JSON.stringify(person),
+                        success: function (data) {
+                            $('#id3').val('');
+                            $('#author3').val('');
+                            $('#text3').val('');
+                            alert(data);
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    });
+                }
+            });
+
+            $('#Delete').click(function () {
+                var id = $('#id4').val();
+                if (id == "") {
+                    alert("Please input an ID!");
+                }
+                else if (parseInt(id) <= 0) {
+                    alert("Error");
+                }
+                else {
+                    $.ajax({
+                        url: "../api/Comments/Delete/" + id,
+                        type: "delete",
+                        success: function (data) {
+                            $('#id4').val('');
+                            alert(data);
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    });
+                }
+            });
         });
-        function searchAll()
-        {
+        function searchAll() {
             //window.open("../api/Comments/");
             $.ajax({
-                url: "../api/Comments/" ,
+                url: "../api/Comments/",
                 type: "get",
                 success: function (data) {
                     var count = data.length;

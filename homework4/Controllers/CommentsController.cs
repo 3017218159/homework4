@@ -42,18 +42,50 @@ namespace homework4.Controllers
         }
 
         // POST api/values
-        public void Post([FromBody]string value)
+        public string Post([FromBody]Comment comment)
         {
+            if (!ids.Contains(comment.ID))
+            {
+                comments.Add(new Comment { ID = comment.ID, Author = comment.Author, Text = comment.Text });
+                ids.Add(comment.ID);
+                return "Created";
+            }
+            else
+            {
+                return "ID is Exist";
+            }
         }
 
         // PUT api/values/5
-        public void Put(int id, [FromBody]string value)
+        public string Put(int id, [FromBody]Comment comment)
         {
+            if (ids.Contains(id))
+            {
+                int index = ids.IndexOf(id);
+                comments[index].Author = comment.Author;
+                comments[index].Text = comment.Text;
+                return "Updated";
+            }
+            else
+            {
+                return "ID is not exist";
+            }
         }
 
         // DELETE api/values/5
-        public void Delete(int id)
+        public string Delete(int id)
         {
+            if (ids.Contains(id))
+            {
+                int index = ids.IndexOf(id);
+                ids.Remove(id);
+                comments.RemoveAt(index);
+                return "Deleted";
+            }
+            else
+            {
+                return "ID is not exist";
+            }
         }
     }
 }
